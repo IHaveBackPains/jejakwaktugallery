@@ -1,0 +1,198 @@
+{
+    "Orasis Art Space": {
+        "name": "Orasis Art Space",
+        "lat": -7.2903582,
+        "lng": 112.6955732,
+        "query": "Jl. Bukit Golf, Surabaya",
+        "display_name": "Jalan Bukit Darmo Golf, Bukit Darmo, RW 02, Pradahkali Kendal, Dukuh Pakis, Surabaya, Jawa Timur, 60189, Indonesia"
+    },
+    "Visma Art Gallery": {
+        "name": "Visma Art Gallery",
+        "lat": -7.2763435,
+        "lng": 112.7337319,
+        "query": "Jl. Tegalsari No. 35, Surabaya",
+        "display_name": "Tegalsari, Surabaya, Jawa Timur, Indonesia"
+    },
+    "UYCC Art Gallery": {
+        "name": "UYCC Art Gallery",
+        "lat": -7.268042,
+        "lng": 112.747901,
+        "query": "The WIN Hotel Surabaya",
+        "display_name": "The WIN Hotel, No. 46-48, Jalan Embong Tanjung, RW 04, Embong Kaliasin, Genteng, Surabaya, Jawa Timur, 60271, Indonesia"
+    },
+    "Unicorn Creative Space": {
+        "name": "Unicorn Creative Space",
+        "lat": -7.2700574,
+        "lng": 112.7755609,
+        "query": "Dharmahusada Indah Utara, Surabaya",
+        "display_name": "Jalan Dharmahusada Indah Utara I, RW 08, Mulyorejo, Surabaya, Jawa Timur, 60115, Indonesia"
+    },
+    "Galeri Prabangkara": {
+        "name": "Galeri Prabangkara",
+        "lat": -7.2566051,
+        "lng": 112.7397642,
+        "query": "Taman Budaya Jawa Timur, Surabaya",
+        "display_name": "UPT Taman Budaya Dinas Kebudayaan & Pariwisata Prov. Jatim, Jalan Genteng Kali, RW 06, Genteng, Surabaya, Jawa Timur, 60274, Indonesia"
+    },
+    "Vin Autism Gallery": {
+        "name": "Vin Autism Gallery",
+        "lat": -7.2878805,
+        "lng": 112.6554319,
+        "query": "G-Walk Citraland, Surabaya",
+        "display_name": "Bundaran G-Walk A, Niaga Gapura Road, Citraland, RW 13, Lontar, Sambikerep, Surabaya, Jawa Timur, 60217, Indonesia"
+    },
+    "Teh Villa Gallery": {
+        "name": "Teh Villa Gallery",
+        "lat": -7.3367071,
+        "lng": 112.7540708,
+        "query": "Rungkut Industri II, Surabaya",
+        "display_name": "Dinas Kebakaran UPTD 3 Surabaya, Jalan Brebek Industri II, Kawasan Industri Rungkut (SIER), Industri Rungkut Sari, Kutisari, Tenggilis Mejoyo, Surabaya, Jawa Timur, 60143, Indonesia"
+    },
+    "Samata House": {
+        "name": "Samata House",
+        "lat": -7.2666634,
+        "lng": 112.7496335,
+        "query": "Jl. Kayoon, Surabaya",
+        "display_name": "Jalan Kayoon, RW 05, Embong Kaliasin, Genteng, Surabaya, Jawa Timur, 60281, Indonesia"
+    },
+    "C2O Library & Collabtive": {
+        "name": "C2O Library & Collabtive",
+        "lat": -7.2812044,
+        "lng": 112.7388612,
+        "query": "Dr. Cipto, Surabaya",
+        "display_name": "Jalan Dokter Cipto, RW 11, Dr. Sutomo, Tegalsari, Surabaya, Jawa Timur, 60264, Indonesia"
+    },
+    "Rahasia Art Space": {
+        "name": "Rahasia Art Space",
+        "lat": -7.318147,
+        "lng": 112.7900883,
+        "query": "Jl. Pandugo Timur, Surabaya",
+        "display_name": "Jalan Pandugo Timur VII, Puri Indah, RW 05, Penjaringan Sari, Rungkut, Surabaya, Jawa Timur, 60297, Indonesia"
+    },
+    "Galeri Merah Putih": {
+        "name": "Galeri Merah Putih",
+        "lat": -7.2639219,
+        "lng": 112.745293,
+        "query": "Balai Pemuda Surabaya",
+        "display_name": "Balai Pemuda, Jalan Gubernur Suryo, RW 02, Embong Kaliasin, Genteng, Surabaya, Jawa Timur, 60271, Indonesia"
+    },
+    "Galeri Mojopahit": {
+        "name": "Galeri Mojopahit",
+        "lat": -7.2927865,
+        "lng": 112.7419552,
+        "query": "Jl. Darmokali, Surabaya",
+        "display_name": "Jalan Darmokali, RW 03, Darmo, Wonokromo, Surabaya, Jawa Timur, 60421, Indonesia"
+    },
+    "HaDi Art Platform": {
+        "name": "HaDi Art Platform",
+        "lat": -7.2927865,
+        "lng": 112.7419552,
+        "query": "Jl. Darmokali, Surabaya",
+        "display_name": "Jalan Darmokali, RW 03, Darmo, Wonokromo, Surabaya, Jawa Timur, 60421, Indonesia"
+    },
+    "Studio Lima Gallery": {
+        "name": "Studio Lima Gallery",
+        "lat": -7.3225397,
+        "lng": 112.7942222,
+        "query": "Medokan Asri Utara, Surabaya",
+        "display_name": "Medokan Asri Utara, RW 08, Medokan Ayu, Rungkut, Surabaya, Jawa Timur, Indonesia"
+    },
+    "Wusto Art Gallery": {
+        "name": "Wusto Art Gallery",
+        "lat": -7.3091349,
+        "lng": 112.7342835,
+        "query": "Royal Plaza Surabaya",
+        "display_name": "Royal Plaza, 16-18, Jalan Jenderal Achmad Yani, RW 04, Wonokromo, Surabaya, Jawa Timur, 60231, Indonesia"
+    },
+    "Utama Slamet Art Gallery": {
+        "name": "Utama Slamet Art Gallery",
+        "lat": -7.3258547,
+        "lng": 112.7985061,
+        "query": "Jl. Pahlawan, Surabaya",
+        "display_name": "Jalan Makam Pahlawan, RW 02, Medokan Ayu, Rungkut, Surabaya, Jawa Timur, 60295, Indonesia"
+    },
+    "Unsur Site": {
+        "name": "Unsur Site",
+        "lat": -7.2819427,
+        "lng": 112.7348337,
+        "query": "Jl. Untung Suropati, Surabaya",
+        "display_name": "Jalan Untung Suropati, RW 12, Dr. Sutomo, Tegalsari, Surabaya, Jawa Timur, 60264, Indonesia"
+    },
+    "Filadelvia": {
+        "name": "Filadelvia",
+        "lat": -7.2762729,
+        "lng": 112.6446587,
+        "query": "Taman Puspa Raya, Surabaya",
+        "display_name": "Taman Puspa Raya, Citraland, RW 07, Made, Sambikerep, Surabaya, Jawa Timur, 60219, Indonesia"
+    },
+    "Art Center BG Junction": {
+        "name": "Art Center BG Junction",
+        "lat": -7.2549143,
+        "lng": 112.7334286,
+        "query": "BG Junction Surabaya",
+        "display_name": "BG Junction, Jalan Kranggan V, RW 01, Bubutan, Surabaya, Jawa Timur, 60251, Indonesia"
+    },
+    "Kampoeng Seni": {
+        "name": "Kampoeng Seni",
+        "lat": -7.2549143,
+        "lng": 112.7334286,
+        "query": "BG Junction Mall Surabaya",
+        "display_name": "BG Junction, Jalan Kranggan VI, RW 01, Bubutan, Surabaya, Jawa Timur, 60179, Indonesia"
+    },
+    "Sakura Warangan Keris": {
+        "name": "Sakura Warangan Keris",
+        "lat": -7.2910403,
+        "lng": 112.7210246,
+        "query": "Pakis Tirtosari, Surabaya",
+        "display_name": "Universitas 45 Surabaya, Jalan Pakis Tirtosari IV, RW 05, Pakis, Sawahan, Surabaya, Jawa Timur, 60256, Indonesia"
+    },
+    "Cai-Cai Company": {
+        "name": "Cai-Cai Company",
+        "lat": -7.2605867,
+        "lng": 112.7785473,
+        "query": "Kalijudan Indah, Surabaya",
+        "display_name": "Villa Kalijudan Indah, RW 07, Kalijudan, Mulyorejo, Surabaya, Jawa Timur, Indonesia"
+    },
+    "Galeri DKS / Balai Pemuda": {
+        "name": "Galeri DKS / Balai Pemuda",
+        "lat": -7.2645158,
+        "lng": 112.7455144,
+        "query": "Jl. Gubernur Suryo No. 15, Surabaya",
+        "display_name": "Jalan Gubernur Suryo, RW 02, Embong Kaliasin, Genteng, Surabaya, Jawa Timur, 68485, Indonesia"
+    },
+    "Emmitan Fine Art Gallery": {
+        "name": "Emmitan Fine Art Gallery",
+        "lat": -7.2607032,
+        "lng": 112.7467381,
+        "query": "Jl. Walikota Mustajab, Surabaya",
+        "display_name": "Jalan Walikota Mustajab, RW 06, Ketabang, Genteng, Surabaya, Jawa Timur, 60272, Indonesia"
+    },
+    "Gracia Art Gallery": {
+        "name": "Gracia Art Gallery",
+        "lat": -7.2891865,
+        "lng": 112.6874017,
+        "query": "Bukit Darmo Golf, Surabaya",
+        "display_name": "Bukit Darmo Golf, Jalan Pradah Kali Kendal XI, RW 01, Pradahkali Kendal, Dukuh Pakis, Surabaya, Jawa Timur, 60226, Indonesia"
+    },
+    "ITS Cultural Center": {
+        "name": "ITS Cultural Center",
+        "lat": -7.2826954,
+        "lng": 112.7956782,
+        "query": "Institut Teknologi Sepuluh Nopember, Surabaya",
+        "display_name": "Institut Teknologi Sepuluh Nopember, Keputih Gang I, RW 03, Keputih, Sukolilo, Surabaya, Jawa Timur, 60111, Indonesia"
+    },
+    "Galeri AJBS": {
+        "name": "Galeri AJBS",
+        "lat": -7.2919394,
+        "lng": 112.7447869,
+        "query": "AJBS Surabaya",
+        "display_name": "AJBS, AJBS Home Centre, RW 01, Ngagel, Wonokromo, Surabaya, Jawa Timur, 60243, Indonesia"
+    },
+    "House of Sampoerna": {
+        "name": "House of Sampoerna",
+        "lat": -7.2309923,
+        "lng": 112.7341461,
+        "query": "House of Sampoerna Surabaya",
+        "display_name": "House of Sampoerna, 6, Jalan Sampoerna, RW 01, Krembangan Utara, Pabean Cantian, Surabaya, Jawa Timur, 60163, Indonesia"
+    }
+}

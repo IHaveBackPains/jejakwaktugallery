@@ -1,0 +1,81 @@
+/**
+ * Vintage Animations & Micro-Interactions "Jejak Waktu"
+ */
+
+@keyframes paperRustle {
+    0% { transform: rotate(0deg) scale(1); }
+    30% { transform: rotate(-1.5deg) scale(1.01); }
+    60% { transform: rotate(1deg) scale(0.995); }
+    100% { transform: rotate(0deg) scale(1); }
+}
+
+@keyframes fadeInAged {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes stampSlam {
+    0% {
+        opacity: 0;
+        transform: scale(2.2) rotate(-15deg);
+    }
+    60% {
+        opacity: 0.9;
+        transform: scale(0.92) rotate(-4deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(-4deg);
+    }
+}
+
+@keyframes vinylSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes pulseGlow {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+.animate-fade-in {
+    animation: fadeInAged 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-stamp {
+    animation: stampSlam 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.spin-vinyl {
+    animation: vinylSpin 3s linear infinite;
+}
+
+/* Page Transition / Tab Transition */
+.tab-content {
+    display: none;
+    opacity: 0;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeInAged 0.4s ease-out forwards;
+}
+
+/* Image Shimmer Loading Placeholder */
+.img-loading-shimmer {
+    background: linear-gradient(90deg, #ebdcc4 0%, #f7f1e5 50%, #ebdcc4 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}

@@ -1,0 +1,89 @@
+{
+    "status": "success",
+    "data": [
+        {
+            "id": "raden-saleh",
+            "name": "Raden Saleh Syarif Bustaman",
+            "role": "Pelukis Maestro & Pioneer Seni Rupa Modern Nusantara",
+            "era": "1850-1880",
+            "category": "pelukis",
+            "avatar": "https:\/\/images.unsplash.com\/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&q=80",
+            "bio": "Pelopor seni rupa modern Indonesia berkebangsaan Jawa yang memadukan romantisisme Eropa dengan panorama dan satwa liar Nusantara. Karya-karyanya diakui sebagai warisan budaya bernilai tinggi.",
+            "location": "Semarang & Batavia",
+            "artworks": [],
+            "artworks_count": 1
+        },
+        {
+            "id": "bambang-soetjipto",
+            "name": "Arsiparis Bambang S. \/ Bambang Soetjipto",
+            "role": "Fotografer Dokumenter Lanskap Kota Batavia & Jakarta",
+            "era": "1970-1985",
+            "category": "fotografer",
+            "avatar": "https:\/\/images.unsplash.com\/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80",
+            "bio": "Kurator senior yang mendedikasikan hidupnya merekam dinamika pembangunan Ibukota Jakarta dari era trem listrik hingga munculnya gedung pencakar langit pertama di Thamrin.",
+            "location": "DKI Jakarta",
+            "artworks": [],
+            "artworks_count": 2
+        },
+        {
+            "id": "rina-kartika",
+            "name": "Rina Kartika",
+            "role": "Fotografer Komunitas & Kenangan Remaja 90-an",
+            "era": "1990-an",
+            "category": "fotografer",
+            "avatar": "https:\/\/images.unsplash.com\/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
+            "bio": "Alumni SMA Negeri 1 Nusantara angkatan 1995 yang rajin mengabadikan momen keseharian sahabat dan warna-warni kehidupan remaja era 90-an.",
+            "location": "Bandung & Jakarta",
+            "artworks": [],
+            "artworks_count": 1
+        },
+        {
+            "id": "ki-suryo",
+            "name": "Ki Suryo Sasongko",
+            "role": "Dokumentator Budaya & Pedesaan Tradisional Jawa",
+            "era": "1960-1975",
+            "category": "kurator",
+            "avatar": "https:\/\/images.unsplash.com\/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80",
+            "bio": "Pemerhati budaya Jawa yang merekam kehangatan tradisi gotong royong, kehidupan persawahan lereng Merapi, dan kearifan lokal masyarakat perdesaan.",
+            "location": "Yogyakarta & Klaten",
+            "artworks": [],
+            "artworks_count": 1
+        },
+        {
+            "id": "soedarsono",
+            "name": "Ir. Soedarsono",
+            "role": "Arsiparis Sejarah Transportasi & Lokomotif Uap",
+            "era": "1950-1965",
+            "category": "arsiparis",
+            "avatar": "https:\/\/images.unsplash.com\/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80",
+            "bio": "Insinyur rel kereta api generasi awal yang mendokumentasikan kejayaan lokomotif uap raksasa Seri D52 dan rute-rute pegunungan bersejarah di Priangan.",
+            "location": "Ambarawa & Bandung",
+            "artworks": [],
+            "artworks_count": 1
+        },
+        {
+            "id": "andra-permana",
+            "name": "Andra Permana",
+            "role": "Fotografer Komunitas Y2K & Era Milenium 2000-an",
+            "era": "2000-an",
+            "category": "fotografer",
+            "avatar": "https:\/\/images.unsplash.com\/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&q=80",
+            "bio": "Penggiat fotografi digital generasi awal yang mengabadikan tren kultur pop Y2K, menjamurnya posko wartel, dan kaset CD musik awal dekade 2000-an.",
+            "location": "Bandung",
+            "artworks": [],
+            "artworks_count": 1
+        },
+        {
+            "id": "maya-indah",
+            "name": "Maya Indah",
+            "role": "Seniman Instalasi Kontemporer & Media Baru 2010-an",
+            "era": "2010-an",
+            "category": "pelukis",
+            "avatar": "https:\/\/images.unsplash.com\/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80",
+            "bio": "Seniman kontemporer yang aktif merespons sejarah melalui perpaduan instalasi pencahayaan lampu vintage dan fotografi digital fine art.",
+            "location": "Yogyakarta",
+            "artworks": [],
+            "artworks_count": 1
+        }
+    ]
+}

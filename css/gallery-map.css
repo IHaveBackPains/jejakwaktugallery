@@ -1,0 +1,1466 @@
+/**
+ * gallery-map.css
+ * Komponen Peta Galeri Seni Surabaya — Jejak Waktu
+ * Menyesuaikan design system vintage yang sudah ada di vintage.css
+ */
+
+/* ============================================================
+   WRAPPER UTAMA — Kartu bergaya "amplop antik"
+   ============================================================ */
+.gallery-map-widget {
+    width: 100%;
+    margin-top: 1.25rem;
+    background: linear-gradient(160deg, #fbf5e6 0%, #f0e8d5 100%);
+    border: 1px solid var(--color-paper-border, #d4bf9c);
+    border-radius: 6px;
+    box-shadow:
+        0 4px 18px rgba(43, 26, 17, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        inset 0 -1px 0 rgba(160, 120, 70, 0.12);
+    overflow: hidden;
+    font-family: var(--font-body, 'Lora', Georgia, serif);
+    position: relative;
+}
+
+/* Garis dekoratif "label amplop" di atas */
+.gallery-map-widget::before {
+    content: '';
+    display: block;
+    height: 4px;
+    background: repeating-linear-gradient(
+        90deg,
+        var(--color-leather-brown, #4d2f1d) 0px,
+        var(--color-leather-brown, #4d2f1d) 10px,
+        var(--color-gold-foil, #c99e46) 10px,
+        var(--color-gold-foil, #c99e46) 20px
+    );
+}
+
+/* ============================================================
+   HEADER WIDGET
+   ============================================================ */
+.gallery-map-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem 0.5rem;
+    border-bottom: 1px dashed var(--color-paper-border, #d4bf9c);
+}
+
+.gallery-map-header-icon {
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+.gallery-map-title {
+    flex: 1;
+    font-family: var(--font-heading, 'Playfair Display', serif);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-ink-dark, #2b231d);
+    letter-spacing: 0.03em;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.gallery-map-subtitle {
+    font-family: var(--font-typewriter, 'Special Elite', monospace);
+    font-size: 0.65rem;
+    color: var(--color-ink-faded, #78604d);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin: 0.1rem 0 0;
+}
+
+.gallery-map-counter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    background: var(--color-leather-brown, #4d2f1d);
+    color: var(--color-gold-foil, #c99e46);
+    border-radius: 50%;
+    font-family: var(--font-typewriter, monospace);
+    font-size: 0.65rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* ============================================================
+   PETA LEAFLET
+   ============================================================ */
+.gallery-map-canvas {
+    width: 100%;
+    height: 240px;
+    position: relative;
+    z-index: 1;
+    filter: sepia(18%) saturate(0.85) contrast(1.05);
+    transition: filter 0.3s ease;
+}
+
+.gallery-map-canvas:hover {
+    filter: sepia(0%) saturate(1) contrast(1);
+}
+
+.gallery-map-canvas .leaflet-control-attribution {
+    font-size: 0.55rem;
+    background: rgba(251, 247, 238, 0.85);
+    color: var(--color-ink-faded, #78604d);
+    font-family: var(--font-typewriter, monospace);
+}
+
+.gallery-map-canvas .leaflet-control-zoom a {
+    background: var(--color-paper-light, #fbf7ee) !important;
+    color: var(--color-ink-dark, #2b231d) !important;
+    border-color: var(--color-paper-border, #d4bf9c) !important;
+    font-family: serif;
+}
+
+.gallery-map-canvas .leaflet-control-zoom a:hover {
+    background: var(--color-paper-aged, #ebdcc4) !important;
+}
+
+.gallery-custom-marker {
+    background: transparent;
+    border: none;
+}
+
+.gallery-custom-marker svg {
+    filter: drop-shadow(0 2px 4px rgba(43, 26, 17, 0.45));
+    transition: transform 0.2s ease;
+}
+
+/* ============================================================
+   HINT TEXT
+   ============================================================ */
+.gallery-map-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 1rem;
+    background: rgba(160, 120, 70, 0.07);
+    border-top: 1px solid rgba(160, 120, 70, 0.12);
+    font-family: var(--font-typewriter, monospace);
+    font-size: 0.6rem;
+    color: var(--color-ink-faded, #78604d);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.gallery-map-hint::before {
+    content: '◉';
+    animation: pulseHint 2s ease-in-out infinite;
+    color: var(--color-stamp-red, #a8382b);
+}
+
+@keyframes pulseHint {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+/* ============================================================
+   PANEL INFO — tampil di bawah peta saat marker diklik
+   ============================================================ */
+.gallery-info-panel {
+    overflow: hidden;
+    max-height: 0;
+    transition:
+        max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.35s ease,
+        transform 0.35s ease;
+    opacity: 0;
+    transform: translateY(-6px);
+    background: linear-gradient(180deg, #f8f0e0 0%, #f2e6cc 100%);
+    border-top: 2px solid var(--color-paper-border, #d4bf9c);
+}
+
+.gallery-info-panel.is-open {
+    max-height: 500px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.gallery-info-inner {
+    padding: 0.85rem 1rem 1rem;
+    position: relative;
+}
+
+.gallery-info-inner::after {
+    content: '\2709';
+    position: absolute;
+    top: 0.6rem;
+    right: 0.75rem;
+    font-size: 1.1rem;
+    opacity: 0.12;
+    pointer-events: none;
+}
+
+.ginfo-name {
+    font-family: var(--font-heading, 'Playfair Display', serif);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-ink-dark, #2b231d);
+    margin: 0 0 0.5rem;
+    line-height: 1.25;
+    border-bottom: 1px solid var(--color-paper-border, #d4bf9c);
+    padding-bottom: 0.4rem;
+    padding-right: 1.5rem;
+}
+
+.ginfo-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem 0.75rem;
+    margin-bottom: 0.6rem;
+}
+
+.ginfo-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.ginfo-meta-label {
+    font-family: var(--font-typewriter, monospace);
+    font-size: 0.58rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-ink-faded, #78604d);
+}
+
+.ginfo-meta-value {
+    font-family: var(--font-body, 'Lora', serif);
+    font-size: 0.82rem;
+    color: var(--color-ink-sepia, #523826);
+    font-weight: 600;
+}
+
+.ginfo-events-label {
+    font-family: var(--font-typewriter, monospace);
+    font-size: 0.58rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-ink-faded, #78604d);
+    margin-bottom: 0.3rem;
+}
+
+.ginfo-events-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.ginfo-events-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+    font-family: var(--font-body, 'Lora', serif);
+    font-size: 0.78rem;
+    color: var(--color-ink-sepia, #523826);
+    line-height: 1.35;
+}
+
+.ginfo-events-list li::before {
+    content: '\2014';
+    color: var(--color-gold-foil, #c99e46);
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    margin-top: 0.05rem;
+}
+
+.ginfo-maps-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    width: 100%;
+    padding: 0.55rem 0.75rem;
+    background: var(--color-leather-brown, #4d2f1d);
+    color: var(--color-gold-foil, #c99e46);
+    border: 1px solid var(--color-leather-dark, #2c1a11);
+    border-radius: 4px;
+    font-family: var(--font-typewriter, monospace);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 6px rgba(43, 26, 17, 0.25), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+.ginfo-maps-btn:hover {
+    background: var(--color-leather-dark, #2c1a11);
+    color: var(--color-gold-bright, #dfb86c);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(43, 26, 17, 0.35);
+}
+
+.ginfo-maps-btn:active {
+    transform: translateY(0);
+}
+
+.ginfo-maps-btn svg {
+    width: 13px;
+    height: 13px;
+    fill: currentColor;
+    flex-shrink: 0;
+}
+
+.ginfo-close {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    background: none;
+    border: none;
+    color: var(--color-ink-faded, #78604d);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+    transition: color 0.2s, background 0.2s;
+    line-height: 1;
+}
+
+.ginfo-close:hover {
+    color: var(--color-stamp-red, #a8382b);
+    background: rgba(168, 56, 43, 0.08);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 480px) {
+    .gallery-map-canvas { height: 200px; }
+    .ginfo-meta { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   TRIGGER — area klik untuk membuka modal
+   ============================================================ */
+.gallery-map-trigger {
+    cursor: pointer;
+    position: relative;
+    outline: none;
+    display: block;
+}
+
+/* Shimmer overlay saat hover */
+.gallery-map-trigger::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        120deg,
+        transparent 0%,
+        rgba(201, 158, 70, 0.10) 40%,
+        rgba(201, 158, 70, 0.18) 50%,
+        rgba(201, 158, 70, 0.10) 60%,
+        transparent 100%
+    );
+    background-size: 200% 100%;
+    background-position: 200% 0;
+    transition: background-position 0.55s ease, opacity 0.2s ease;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.gallery-map-trigger:hover::after,
+.gallery-map-trigger:focus-visible::after {
+    opacity: 1;
+    background-position: -200% 0;
+}
+
+/* Lift + glow saat hover */
+.gallery-map-trigger:hover .gallery-map-canvas {
+    filter: sepia(0%) saturate(1.05) contrast(1.02);
+    transform: scale(1.008);
+    transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.gallery-map-trigger:focus-visible {
+    box-shadow: 0 0 0 3px rgba(201, 158, 70, 0.5);
+    border-radius: 0 0 4px 4px;
+}
+
+/* ============================================================
+   EXPAND HINT BAR
+   ============================================================ */
+.gallery-map-expand-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.4rem 1rem;
+    background: rgba(77, 47, 29, 0.06);
+    border-top: 1px dashed rgba(201, 158, 70, 0.35);
+    font-family: var(--font-typewriter, 'Special Elite', monospace);
+    font-size: 0.6rem;
+    color: var(--color-ink-faded, #78604d);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.gallery-map-expand-hint svg {
+    width: 12px;
+    height: 12px;
+    stroke: var(--color-gold-foil, #c99e46);
+    flex-shrink: 0;
+    transition: transform 0.25s ease;
+}
+
+.gallery-map-trigger:hover .gallery-map-expand-hint {
+    background: rgba(201, 158, 70, 0.12);
+    color: var(--color-ink-sepia, #523826);
+}
+
+.gallery-map-trigger:hover .gallery-map-expand-hint svg {
+    transform: scale(1.2);
+}
+
+/* ============================================================
+   MODAL — OVERLAY BACKDROP
+   ============================================================ */
+.gmap-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(26, 16, 10, 0.68);
+    backdrop-filter: blur(6px) saturate(0.85);
+    -webkit-backdrop-filter: blur(6px) saturate(0.85);
+    padding: 1.5rem;
+    box-sizing: border-box;
+
+    /* Hidden state */
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    transition:
+        opacity 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+        visibility 0.32s step-end;
+}
+
+.gmap-modal-overlay.is-open {
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+    transition:
+        opacity 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+        visibility 0s step-start;
+}
+
+/* ============================================================
+   MODAL — BOX (CARD)
+   ============================================================ */
+.gmap-modal-box {
+    width: min(92vw, 1140px);
+    height: min(90vh, 860px);
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(170deg, #fdf6e8 0%, #f5ebe0 35%, #eedecb 100%);
+    border: 1px solid #c4a47c;
+    border-radius: 10px;
+    box-shadow:
+        0 32px 80px rgba(26, 16, 10, 0.55),
+        0 8px 24px rgba(26, 16, 10, 0.30),
+        inset 0 1px 0 rgba(255, 255, 255, 0.65),
+        inset 0 -1px 0 rgba(160, 120, 70, 0.15);
+    overflow: hidden;
+    position: relative;
+
+    /* Entry animation */
+    transform: scale(0.88) translateY(24px);
+    transition:
+        transform 0.38s cubic-bezier(0.34, 1.28, 0.64, 1),
+        opacity 0.32s ease;
+}
+
+/* Garis dekoratif atas — cokelat & emas */
+.gmap-modal-box::before {
+    content: '';
+    display: block;
+    height: 5px;
+    flex-shrink: 0;
+    background: repeating-linear-gradient(
+        90deg,
+        #4d2f1d 0px, #4d2f1d 14px,
+        #c99e46 14px, #c99e46 28px
+    );
+}
+
+.gmap-modal-overlay.is-open .gmap-modal-box {
+    transform: scale(1) translateY(0);
+}
+
+/* ============================================================
+   MODAL — HEADER & ACTIONS
+   ============================================================ */
+.gmap-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.85rem 1.25rem 0.75rem;
+    border-bottom: 1px dashed #c4a47c;
+    flex-shrink: 0;
+    background: rgba(253, 246, 232, 0.6);
+}
+
+.gmap-modal-header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.gmap-modal-icon {
+    font-size: 1.6rem;
+    line-height: 1;
+    filter: drop-shadow(0 1px 2px rgba(77, 47, 29, 0.3));
+}
+
+.gmap-modal-title {
+    font-family: var(--font-heading, 'Playfair Display', Georgia, serif);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #2b231d;
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+}
+
+.gmap-modal-subtitle {
+    font-family: var(--font-typewriter, 'Special Elite', monospace);
+    font-size: 0.65rem;
+    color: #78604d;
+    margin: 0.2rem 0 0;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.gmap-modal-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.gmap-header-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.7rem;
+    background: #fdf6e8;
+    border: 1px solid #c4a47c;
+    border-radius: 4px;
+    font-family: var(--font-typewriter, monospace);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #4d2f1d;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(77, 47, 29, 0.1);
+}
+
+.gmap-header-btn:hover,
+.gmap-header-btn.is-active {
+    background: #4d2f1d;
+    color: #c99e46;
+    border-color: #382012;
+}
+
+.gmap-header-btn .gmap-count-badge {
+    background: #a8382b;
+    color: #fff;
+    font-size: 0.62rem;
+    padding: 1px 5px;
+    border-radius: 10px;
+    margin-left: 2px;
+}
+
+/* Tombol Tutup (X) */
+.gmap-modal-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    background: rgba(77, 47, 29, 0.08);
+    border: 1.5px solid rgba(77, 47, 29, 0.18);
+    border-radius: 50%;
+    cursor: pointer;
+    color: #4d2f1d;
+    transition: background 0.2s ease, color 0.2s ease,
+                transform 0.2s ease, box-shadow 0.2s ease;
+    padding: 0;
+}
+
+.gmap-modal-close svg {
+    width: 15px;
+    height: 15px;
+}
+
+.gmap-modal-close:hover {
+    background: #a8382b;
+    border-color: #8a2a1e;
+    color: #fdf6e8;
+    transform: rotate(90deg) scale(1.08);
+    box-shadow: 0 4px 12px rgba(168, 56, 43, 0.4);
+}
+
+/* ============================================================
+   TOOLBAR: PENCARIAN & FILTER CONTROLS
+   ============================================================ */
+.gmap-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.55rem 1.25rem;
+    background: rgba(245, 235, 224, 0.75);
+    border-bottom: 1px solid #dbc3a3;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+.gmap-search-wrap {
+    flex: 1;
+    min-width: 220px;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.gmap-search-icon {
+    position: absolute;
+    left: 0.75rem;
+    font-size: 0.85rem;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.gmap-search-input {
+    width: 100%;
+    padding: 0.45rem 2rem 0.45rem 2.2rem;
+    background: #fdf9f0;
+    border: 1px solid #c9b392;
+    border-radius: 4px;
+    font-family: var(--font-body, 'Lora', serif);
+    font-size: 0.82rem;
+    color: #2b231d;
+    box-shadow: inset 0 1px 3px rgba(77, 47, 29, 0.08);
+    transition: all 0.2s ease;
+}
+
+.gmap-search-input:focus {
+    outline: none;
+    border-color: #a8382b;
+    box-shadow: 0 0 0 2px rgba(168, 56, 43, 0.2), inset 0 1px 2px rgba(77, 47, 29, 0.1);
+    background: #fff;
+}
+
+.gmap-search-clear {
+    position: absolute;
+    right: 0.6rem;
+    background: none;
+    border: none;
+    color: #78604d;
+    font-size: 0.85rem;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+}
+
+.gmap-search-clear:hover {
+    color: #a8382b;
+}
+
+.gmap-filters-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+}
+
+.gmap-select-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.gmap-filter-label {
+    font-family: var(--font-typewriter, monospace);
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #5c3c26;
+    text-transform: uppercase;
+}
+
+.gmap-select {
+    padding: 0.4rem 0.65rem;
+    background: #fdf9f0;
+    border: 1px solid #c9b392;
+    border-radius: 4px;
+    font-family: var(--font-body, 'Lora', serif);
+    font-size: 0.78rem;
+    color: #2b231d;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(77, 47, 29, 0.08);
+    transition: border-color 0.2s ease;
+}
+
+.gmap-select:focus {
+    outline: none;
+    border-color: #a8382b;
+}
+
+/* ============================================================
+   CATEGORY PILLS BAR (HORIZONTAL SCROLL)
+   ============================================================ */
+.gmap-category-pills-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 1.25rem;
+    background: rgba(238, 222, 203, 0.65);
+    border-bottom: 1px solid #d4bf9c;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: thin;
+    scrollbar-color: #c4a47c transparent;
+    flex-shrink: 0;
+}
+
+.gmap-category-pills-bar::-webkit-scrollbar {
+    height: 4px;
+}
+
+.gmap-category-pills-bar::-webkit-scrollbar-thumb {
+    background: #c4a47c;
+    border-radius: 2px;
+}
+
+.gmap-pill {
+    padding: 0.28rem 0.65rem;
+    background: #fbf5e6;
+    border: 1px solid #cfb996;
+    border-radius: 20px;
+    font-family: var(--font-typewriter, monospace);
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: #4d2f1d;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.gmap-pill:hover {
+    background: #f3e5ce;
+    border-color: #b5986e;
+    color: #2b231d;
+}
+
+.gmap-pill.is-active {
+    background: #4d2f1d;
+    color: #c99e46;
+    border-color: #382012;
+    box-shadow: 0 2px 5px rgba(77, 47, 29, 0.25);
+}
+
+/* ============================================================
+   MAIN STAGE: MAP + DRAWERS + DETAIL PANEL
+   ============================================================ */
+.gmap-modal-main {
+    flex: 1 1 auto;
+    min-height: 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.gmap-modal-map-wrap {
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: 0;
+    position: relative;
+}
+
+.gmap-modal-canvas {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    display: block;
+    filter: sepia(10%) saturate(0.92);
+}
+
+/* Leaflet controls override */
+.gmap-modal-canvas .leaflet-control-zoom a {
+    background: #fbf7ee !important;
+    color: #2b231d !important;
+    border-color: #c4a47c !important;
+    font-family: serif;
+    font-size: 1.05rem;
+    width: 32px;
+    height: 32px;
+    line-height: 30px;
+}
+
+.gmap-modal-canvas .leaflet-control-zoom a:hover {
+    background: #ebdcc4 !important;
+}
+
+/* ============================================================
+   SIDE DRAWERS (LIST & LEGEND)
+   ============================================================ */
+.gmap-drawer {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: min(340px, 86%);
+    background: linear-gradient(175deg, #fdf7ec 0%, #f4eadc 100%);
+    border-right: 1px solid #c4a47c;
+    box-shadow: 4px 0 20px rgba(43, 26, 17, 0.25);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(-105%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+}
+
+.gmap-drawer.is-open {
+    transform: translateX(0);
+    pointer-events: auto;
+}
+
+.gmap-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    background: #ebdcc4;
+    border-bottom: 1px solid #c4a47c;
+    flex-shrink: 0;
+}
+
+.gmap-drawer-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.gmap-drawer-title {
+    font-family: var(--font-heading, 'Playfair Display', serif);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #2b231d;
+    margin: 0;
+}
+
+.gmap-drawer-badge {
+    background: #4d2f1d;
+    color: #c99e46;
+    font-family: var(--font-typewriter, monospace);
+    font-size: 0.62rem;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 10px;
+}
+
+.gmap-drawer-close {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    color: #78604d;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+}
+
+.gmap-drawer-close:hover {
+    color: #a8382b;
+}
+
+.gmap-list-scroll,
+.gmap-legend-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.65rem;
+    scrollbar-width: thin;
+    scrollbar-color: #c4a47c transparent;
+}
+
+/* List Item Card inside Drawer */
+.gmap-list-item {
+    display: block;
+    background: #fff8ee;
+    border: 1px solid #dcc8b0;
+    border-radius: 6px;
+    padding: 0.6rem 0.75rem;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.gmap-list-item:hover,
+.gmap-list-item.is-selected {
+    background: #f5e7d3;
+    border-color: #a8382b;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(77, 47, 29, 0.12);
+}
+
+.gmap-list-item-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.2rem;
+}
+
+.gmap-list-item-title {
+    font-family: var(--font-heading, serif);
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #2b231d;
+    margin: 0;
+    line-height: 1.25;
+}
+
+.gmap-list-item-addr {
+    font-size: 0.72rem;
+    color: #78604d;
+    margin: 0.15rem 0 0.35rem;
+    line-height: 1.3;
+}
+
+.gmap-list-item-tags {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+}
+
+/* Badges */
+.gmap-badge-category {
+    font-size: 0.62rem;
+    font-family: var(--font-typewriter, monospace);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-weight: 700;
+    display: inline-block;
+}
+
+.gmap-badge-status {
+    font-size: 0.6rem;
+    font-family: var(--font-typewriter, monospace);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.status-aktif {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #c8e6c9;
+}
+
+.status-historis {
+    background: #efebe9;
+    color: #5d4037;
+    border: 1px solid #d7ccc8;
+}
+
+.status-verifikasi {
+    background: #fff8e1;
+    color: #f57f17;
+    border: 1px solid #ffe082;
+}
+
+/* Legend items */
+.gmap-legend-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.65rem;
+    background: #fff9f0;
+    border: 1px solid #dfcfbc;
+    border-radius: 5px;
+    margin-bottom: 0.45rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.gmap-legend-item:hover {
+    background: #f5e9d8;
+    border-color: #b59570;
+}
+
+.gmap-legend-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.gmap-legend-icon-badge {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: #fff;
+    flex-shrink: 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.gmap-legend-name {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #2b231d;
+}
+
+.gmap-legend-count {
+    font-family: var(--font-typewriter, monospace);
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #78604d;
+    background: #ebdcc4;
+    padding: 1px 6px;
+    border-radius: 10px;
+}
+
+/* ============================================================
+   CUSTOM VINTAGE MARKER & CLUSTER ICONS
+   ============================================================ */
+.gallery-custom-marker {
+    filter: drop-shadow(0 2px 4px rgba(43, 26, 17, 0.4));
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.gallery-custom-marker:hover,
+.gallery-custom-marker.is-active {
+    transform: scale(1.18);
+    z-index: 1000 !important;
+}
+
+/* Vintage Marker Cluster */
+.marker-cluster-vintage {
+    background: radial-gradient(circle, #fcf4e4 0%, #eedecb 100%);
+    border: 2.5px solid #4d2f1d;
+    color: #4d2f1d;
+    font-family: var(--font-heading, Georgia, serif);
+    font-weight: 800;
+    border-radius: 50%;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(43, 26, 17, 0.35), inset 0 1px 2px rgba(255,255,255,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.marker-cluster-vintage:hover {
+    transform: scale(1.12);
+    border-color: #a8382b;
+    color: #a8382b;
+}
+
+.marker-cluster-vintage span {
+    font-size: 0.85rem;
+    line-height: 1;
+}
+
+/* ============================================================
+   MODAL — DETAIL INFO PANEL (EXPANDABLE RICH CARD)
+   ============================================================ */
+.gmap-modal-info-panel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    background: linear-gradient(180deg, #fdf7ec 0%, #f4eadc 100%);
+    border-top: 2.5px solid #c4a47c;
+    box-shadow: 0 -8px 25px rgba(43, 26, 17, 0.3);
+    z-index: 999;
+    transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #c4a47c transparent;
+    box-sizing: border-box;
+}
+
+.gmap-modal-info-panel.is-open {
+    max-height: calc(100% - 16px);
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+}
+
+.gmap-modal-info-inner {
+    padding: 1.25rem 1.5rem 2.5rem;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.gmap-detail-card {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.gmap-detail-banner-wrap {
+    position: relative;
+    border: 4px solid #fff;
+    border-radius: 4px;
+    box-shadow: 0 4px 14px rgba(43, 26, 17, 0.25);
+    background: #eee;
+    overflow: hidden;
+}
+
+.gmap-detail-banner {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+    filter: sepia(12%) contrast(1.05);
+}
+
+.gmap-detail-banner-badge {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    font-size: 0.62rem;
+    font-family: var(--font-typewriter, monospace);
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 3px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.gmap-detail-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-right: 1.25rem;
+}
+
+.gmap-detail-header-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-right: 2.5rem;
+}
+
+.gmap-detail-title {
+    font-family: var(--font-heading, 'Playfair Display', Georgia, serif);
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #2b231d;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.gmap-detail-alt-title {
+    font-family: var(--font-typewriter, monospace);
+    font-size: 0.72rem;
+    color: #78604d;
+    margin: 0.2rem 0 0;
+}
+
+.gmap-detail-tags-row {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+    margin-top: 0.35rem;
+}
+
+.gmap-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.65rem 1rem;
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid #dfcfbc;
+    border-radius: 6px;
+    padding: 0.65rem 0.85rem;
+}
+
+.gmap-meta-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.gmap-meta-label {
+    font-family: var(--font-typewriter, monospace);
+    font-size: 0.62rem;
+    font-weight: 700;
+    color: #78604d;
+    text-transform: uppercase;
+}
+
+.gmap-meta-value {
+    font-family: var(--font-body, 'Lora', serif);
+    font-size: 0.82rem;
+    color: #2b231d;
+    line-height: 1.3;
+}
+
+.gmap-detail-section-title {
+    font-family: var(--font-heading, serif);
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #4d2f1d;
+    margin: 0.2rem 0 0.2rem;
+    border-bottom: 1px dashed #d4bf9c;
+    padding-bottom: 2px;
+}
+
+.gmap-detail-text {
+    font-size: 0.82rem;
+    color: #3b2b20;
+    line-height: 1.55;
+    margin: 0;
+}
+
+.gmap-events-list {
+    margin: 0.3rem 0;
+    padding-left: 1.2rem;
+    font-size: 0.8rem;
+    color: #3b2b20;
+    line-height: 1.45;
+}
+
+.gmap-events-list li {
+    margin-bottom: 3px;
+}
+
+.gmap-links-row {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+    margin-top: 0.4rem;
+}
+
+.gmap-link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.38rem 0.8rem;
+    border-radius: 4px;
+    font-family: var(--font-typewriter, monospace);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.gmap-btn-maps {
+    background: #4d2f1d;
+    color: #c99e46;
+    border: 1px solid #382012;
+}
+
+.gmap-btn-maps:hover {
+    background: #a8382b;
+    color: #fff;
+    border-color: #8a2a1e;
+}
+
+.gmap-btn-web {
+    background: #fdf6e8;
+    color: #4d2f1d;
+    border: 1px solid #c4a47c;
+}
+
+.gmap-btn-web:hover {
+    background: #f5e7d3;
+    color: #2b231d;
+}
+
+.gmap-detail-close-btn {
+    position: sticky;
+    top: 0.5rem;
+    float: right;
+    margin-bottom: -32px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #fdf6e8;
+    border: 1.5px solid #c4a47c;
+    color: #4d2f1d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 20;
+    box-shadow: 0 2px 6px rgba(77, 47, 29, 0.2);
+}
+
+.gmap-detail-close-btn:hover {
+    background: #a8382b;
+    color: #fff;
+    border-color: #8a2a1e;
+}
+
+/* ============================================================
+   MODAL — FOOTER
+   ============================================================ */
+.gmap-modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.55rem 1.25rem;
+    background: rgba(77, 47, 29, 0.05);
+    border-top: 1px solid rgba(196, 164, 124, 0.4);
+    flex-shrink: 0;
+}
+
+.gmap-modal-footer-left {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+}
+
+.gmap-modal-footer-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #4d2f1d;
+    color: #c99e46;
+    font-family: var(--font-typewriter, monospace);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.65rem;
+    border-radius: 20px;
+    box-shadow: 0 1px 4px rgba(26, 16, 10, 0.2);
+}
+
+.gmap-modal-footer-badge::before {
+    content: '🗺️';
+    font-size: 0.75rem;
+}
+
+.gmap-modal-footer-summary {
+    font-family: var(--font-typewriter, monospace);
+    font-size: 0.65rem;
+    color: #78604d;
+}
+
+.gmap-modal-footer-credit {
+    font-family: var(--font-typewriter, monospace);
+    font-size: 0.58rem;
+    color: #78604d;
+    letter-spacing: 0.04em;
+}
+
+/* ============================================================
+   RESPONSIVE — MODAL
+   ============================================================ */
+@media (max-width: 900px) {
+    .gmap-detail-card {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    .gmap-detail-banner {
+        height: 140px;
+    }
+}
+
+@media (max-width: 768px) {
+    .gmap-modal-overlay { padding: 0.5rem; }
+
+    .gmap-modal-box {
+        width: 100%;
+        height: min(96vh, 100%);
+        max-height: 96vh;
+        border-radius: 8px;
+    }
+
+    .gmap-modal-title { font-size: 1.05rem; }
+    .gmap-modal-subtitle { font-size: 0.58rem; }
+    .gmap-modal-canvas { min-height: 0; }
+
+    .gmap-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+
+    .gmap-filters-wrap {
+        justify-content: space-between;
+    }
+
+    .gmap-modal-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.35rem;
+    }
+
+    .gmap-modal-info-panel.is-open {
+        max-height: 100%;
+    }
+
+    .gmap-modal-info-inner {
+        padding: 1rem 1rem 2.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .gmap-modal-header { padding: 0.65rem 0.85rem; }
+    .gmap-header-btn .gmap-btn-text { display: none; }
+    .gmap-modal-canvas { min-height: 0; }
+    .gmap-modal-title { font-size: 0.95rem; }
+    .gmap-modal-icon { font-size: 1.25rem; }
+}
+
+@media (max-height: 520px) {
+    .gmap-modal-overlay { padding: 0.25rem; }
+    .gmap-modal-box { height: 98vh; max-height: 98vh; }
+    .gmap-modal-header { padding: 0.4rem 0.85rem; }
+    .gmap-modal-subtitle { display: none; }
+    .gmap-toolbar { padding: 0.35rem 0.85rem; }
+    .gmap-modal-footer { padding: 0.3rem 0.85rem; }
+}
+
+/* ============================================================
+   SCROLL LOCK — body saat modal terbuka
+   ============================================================ */
+body.gmap-modal-open {
+    overflow: hidden;
+}
+
