@@ -1187,7 +1187,7 @@ function initFormHandlers() {
             const curator = document.getElementById('album-form-curator').value.trim() || 'Koleksi Pribadi';
             const coverColor = document.getElementById('album-form-color').value || '#422a1d';
             const desc = document.getElementById('album-form-desc').value.trim();
-            const coverUrl = albumUrlInput ? albumUrlInput.value.trim() : '';
+            const coverImage = albumUrlInput ? albumUrlInput.value.trim() : '';
 
             if (!title) {
                 alert('Silakan masukkan judul buku album.');
@@ -1206,7 +1206,7 @@ function initFormHandlers() {
             formData.append('curator', curator);
             formData.append('cover_color', coverColor);
             formData.append('description', desc);
-            formData.append('cover_url', coverUrl);
+            formData.append('cover_image', coverImage);
 
             if (albumFileInput && albumFileInput.files && albumFileInput.files[0]) {
                 formData.append('cover_file', albumFileInput.files[0]);
@@ -1228,7 +1228,7 @@ function initFormHandlers() {
                         cover_color: coverColor,
                         accent_color: accentColor,
                         description: desc,
-                        cover_url: coverUrl
+                        cover_image: coverImage
                     };
                     const coverFile = (albumFileInput && albumFileInput.files && albumFileInput.files[0]) ? albumFileInput.files[0] : null;
                     const result = await sbAddAlbum(albumPayload, coverFile);
@@ -1256,7 +1256,7 @@ function initFormHandlers() {
 
             // Fallback penyimpanan album lokal jika offline
             if (!savedViaAPI) {
-                let resolvedCover = coverUrl;
+                let resolvedCover = coverImage;
                 if (albumPreviewImg && albumPreviewImg.src && albumPreviewImg.src.startsWith('data:image/')) {
                     resolvedCover = albumPreviewImg.src;
                 }
