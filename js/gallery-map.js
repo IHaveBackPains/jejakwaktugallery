@@ -1,4 +1,4 @@
-﻿/**
+/**
  * gallery-map.js  v4
  * Peta Interaktif Galeri Seni, Art Space & Ruang Budaya Kota Surabaya
  * Jejak Waktu â€” Koleksi Arsip & Seni Budaya Kota Surabaya
@@ -1153,11 +1153,17 @@ window.addEventListener('load', function () {
   // 7. SINKRONISASI DATA DARI API /api/galleries.json
   // =========================================================================
   function loadGalleriesFromApi() {
-    fetch('api/galleries.json')
-      .then(function (res) {
+    var fetchPromise;
+    if (typeof sbFetchGalleries === 'function') {
+      fetchPromise = sbFetchGalleries();
+    } else {
+      fetchPromise = fetch('api/galleries.json').then(function (res) {
         if (!res.ok) throw new Error('HTTP ' + res.status);
         return res.json();
-      })
+      });
+    }
+
+    fetchPromise
       .then(function (json) {
         if (json && json.status === 'success' && Array.isArray(json.data) && json.data.length > 0) {
           allGalleries = json.data;
@@ -1167,7 +1173,7 @@ window.addEventListener('load', function () {
             applyFilters();
           }
           var sub = document.getElementById('galleryMapSidebarSubtitle');
-          if (sub) sub.textContent = 'Peta Interaktif Â· ' + allGalleries.length + ' Lokasi';
+          if (sub) sub.textContent = 'Peta Interaktif · ' + allGalleries.length + ' Lokasi';
           var cnt = document.getElementById('galleryMapSidebarCounter');
           if (cnt) cnt.textContent = allGalleries.length;
         }

@@ -499,15 +499,19 @@ function initGlobalEventDelegation() {
             if (!photoId) return;
 
             if (confirm('Apakah Anda yakin ingin menghapus foto kenangan ini dari arsip?')) {
-                const formData = new FormData();
-                formData.append('photo_id', photoId);
-                formData.append('album_id', albumId);
+                const deleteAction = (typeof sbDeletePhoto === 'function')
+                    ? sbDeletePhoto(photoId, albumId)
+                    : (function() {
+                        const formData = new FormData();
+                        formData.append('photo_id', photoId);
+                        formData.append('album_id', albumId);
+                        return fetch('api/delete_photo.json', {
+                            method: 'POST',
+                            body: formData
+                        }).then(res => res.json());
+                    })();
 
-                fetch('api/delete_photo.json', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(res => res.json())
+                deleteAction
                 .then(async (data) => {
                     if (data.status === 'success') {
                         if (typeof vintageSound !== 'undefined' && vintageSound.playPageFlip) {
@@ -565,14 +569,18 @@ function initGlobalEventDelegation() {
             const albumTitle = album ? album.title : 'ini';
 
             if (confirm(`PERINGATAN: Apakah Anda yakin ingin menghapus buku album "${albumTitle}" beserta seluruh foto di dalamnya? Tindakan ini tidak dapat dibatalkan.`)) {
-                const formData = new FormData();
-                formData.append('album_id', currentAlbumId);
+                const deleteAction = (typeof sbDeleteAlbum === 'function')
+                    ? sbDeleteAlbum(currentAlbumId)
+                    : (function() {
+                        const formData = new FormData();
+                        formData.append('album_id', currentAlbumId);
+                        return fetch('api/delete_album.json', {
+                            method: 'POST',
+                            body: formData
+                        }).then(res => res.json());
+                    })();
 
-                fetch('api/delete_album.json', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(res => res.json())
+                deleteAction
                 .then(async (data) => {
                     if (data.status === 'success') {
                         if (typeof vintageSound !== 'undefined' && vintageSound.playPageFlip) {
@@ -1007,19 +1015,44 @@ function initFormHandlers() {
             let savedViaAPI = false;
 
             try {
-                const response = await fetch('api/add_photo.json', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (response.ok) {
-                    const result = await response.json();
-                    if (result.status === 'success') {
+                if (typeof sbAddPhoto === 'function') {
+                    const photoPayload = {
+                        album_id: targetAlbum,
+                        title: title,
+                        artist_1: artist1,
+                        artist_2: artist2,
+                        year: year,
+                        date: date,
+                        location: location,
+                        medium: medium,
+                        dimensions: dimensions,
+                        copyright: copyright,
+                        caption: caption,
+                        tilt: tilt,
+                        tape: tape,
+                        note: note,
+                        photo_url: photoUrl
+                    };
+                    const fileObj = (fileInput && fileInput.files && fileInput.files[0]) ? fileInput.files[0] : null;
+                    const result = await sbAddPhoto(photoPayload, fileObj);
+                    if (result && result.status === 'success') {
                         savedViaAPI = true;
+                    }
+                } else {
+                    const response = await fetch('api/add_photo.json', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        if (result.status === 'success') {
+                            savedViaAPI = true;
+                        }
                     }
                 }
             } catch (err) {
-                console.warn('API Backend MySQL tidak terjangkau, beralih ke penyimpanan lokal offline.', err);
+                console.warn('Backend gagal atau offline, beralih ke penyimpanan lokal offline.', err);
             }
 
             // Fallback penyimpanan lokal jika offline atau MySQL belum aktif
@@ -1183,16 +1216,38 @@ function initFormHandlers() {
             let createdAlbumId = null;
 
             try {
-                const response = await fetch('api/add_album.json', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (response.ok) {
-                    const result = await response.json();
-                    if (result.status === 'success' && result.data) {
+                if (typeof sbAddAlbum === 'function') {
+                    const albumPayload = {
+                        title: title,
+                        subtitle: subtitle,
+                        era: era,
+                        decade: decade,
+                        category: category,
+                        location: location,
+                        curator: curator,
+                        cover_color: coverColor,
+                        accent_color: accentColor,
+                        description: desc,
+                        cover_url: coverUrl
+                    };
+                    const coverFile = (albumFileInput && albumFileInput.files && albumFileInput.files[0]) ? albumFileInput.files[0] : null;
+                    const result = await sbAddAlbum(albumPayload, coverFile);
+                    if (result && result.status === 'success' && result.data) {
                         savedViaAPI = true;
                         createdAlbumId = result.data.id;
+                    }
+                } else {
+                    const response = await fetch('api/add_album.json', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        if (result.status === 'success' && result.data) {
+                            savedViaAPI = true;
+                            createdAlbumId = result.data.id;
+                        }
                     }
                 }
             } catch (err) {

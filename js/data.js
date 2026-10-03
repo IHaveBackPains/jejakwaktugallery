@@ -1,6 +1,6 @@
-﻿/**
+/**
  * Data Koleksi Album & Foto Vintage "Jejak Waktu"
- * Sinkronisasi dengan MySQL Database (phpMyAdmin) & Fallback LocalStorage
+ * Sinkronisasi dengan Supabase Database & Fallback LocalStorage
  */
 
 const DEFAULT_ALBUMS = [
@@ -318,43 +318,38 @@ const DEFAULT_ALBUMS = [
 
 // Memory state cache
 let loadedAlbumsCache = null;
-let isConnectedToMySQL = false;
+let isConnectedToSupabase = false;
 
-// Async function to load albums from MySQL database with timeout fallback
+/**
+ * Async function: load albums dari Supabase dengan fallback ke LocalStorage/DEFAULT_ALBUMS.
+ * Menggantikan fetch('api/albums.json') MySQL sebelumnya.
+ */
 async function fetchAlbumsFromDB() {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 3500);
+    // Coba ambil data dari Supabase jika sudah dikonfigurasi
+    if (typeof isSupabaseConfigured === 'function' && isSupabaseConfigured()) {
+        try {
+            const searchQuery = (typeof window !== 'undefined' && window.SEARCH_QUERY)
+                ? window.SEARCH_QUERY
+                : '';
 
-    try {
-        const searchParam = (typeof window !== 'undefined' && window.SEARCH_QUERY) 
-            ? '&search=' + encodeURIComponent(window.SEARCH_QUERY) 
-            : '';
-        const response = await fetch('api/albums.json?t=' + Date.now() + searchParam, {
-            signal: controller.signal
-        });
-        clearTimeout(timeoutId);
+            const result = await sbFetchAlbums(searchQuery);
 
-        if (response.ok) {
-            const resData = await response.json();
-            if (resData && resData.status === 'success' && Array.isArray(resData.data)) {
-                // Jika sedang dalam mode pencarian, terima array kosong (0 hasil)
-                if (typeof window !== 'undefined' && window.SEARCH_QUERY) {
-                    loadedAlbumsCache = resData.data;
-                    isConnectedToMySQL = true;
-                    return resData.data;
-                }
-                if (resData.data.length > 0) {
-                    loadedAlbumsCache = resData.data;
-                    isConnectedToMySQL = true;
-                    return resData.data;
+            if (result.status === 'success' && Array.isArray(result.data)) {
+                // Jika mode pencarian, terima array kosong (0 hasil valid)
+                if (searchQuery || result.data.length > 0) {
+                    loadedAlbumsCache = result.data;
+                    isConnectedToSupabase = true;
+                    return result.data;
                 }
             }
+        } catch (e) {
+            console.warn('[Supabase] fetchAlbumsFromDB gagal, beralih ke mode offline:', e);
         }
-    } catch (e) {
-        clearTimeout(timeoutId);
-        console.warn('MySQL API belum terjangkau (mode offline/localStorage diaktifkan).', e.name === 'AbortError' ? 'Koneksi timeout.' : e);
+    } else {
+        console.info('[Supabase] Belum dikonfigurasi — gunakan data lokal/DEFAULT_ALBUMS.');
     }
-    isConnectedToMySQL = false;
+
+    isConnectedToSupabase = false;
     return getAlbumsData();
 }
 
@@ -394,7 +389,7 @@ function getAlbumsData() {
                 if (Array.isArray(parsedExtras)) {
                     album.photos = [...parsedExtras, ...(album.photos || [])];
                 }
-            } catch (e) {}
+            } catch (e) { }
         }
         return album;
     });

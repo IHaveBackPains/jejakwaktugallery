@@ -1,4 +1,4 @@
-﻿/**
+/**
  * JS: Halaman Daftar Seniman & Kontributor Arsip "Jejak Waktu"
  * Mengelola rendering kartu profil artist, filter kategori, galeri karya,
  * serta fitur Edit Profil & Unggah/Ganti Foto Profil Seniman (Admin).
@@ -52,8 +52,13 @@ async function renderArtistsPage() {
 
     try {
         if (!cachedArtistsData || cachedArtistsData.length === 0) {
-            const res = await fetch('api/artists.json');
-            const json = await res.json();
+            let json;
+            if (typeof sbFetchArtists === 'function') {
+                json = await sbFetchArtists();
+            } else {
+                const res = await fetch('api/artists.json');
+                json = await res.json();
+            }
             if (json.status === 'success') {
                 cachedArtistsData = json.data || [];
             } else {
@@ -442,21 +447,26 @@ async function confirmDeleteArtist() {
     }
 
     try {
-        const formData = new URLSearchParams();
-        formData.append('artist_id', artistId);
-        formData.append('action', 'delete');
-        formData.append('_method', 'DELETE');
+        let json;
+        if (typeof sbDeleteArtist === 'function') {
+            json = await sbDeleteArtist(artistId);
+        } else {
+            const formData = new URLSearchParams();
+            formData.append('artist_id', artistId);
+            formData.append('action', 'delete');
+            formData.append('_method', 'DELETE');
 
-        const res = await fetch('api/artists.json?action=delete', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Accept': 'application/json'
-            },
-            body: formData
-        });
+            const res = await fetch('api/artists.json?action=delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': 'application/json'
+                },
+                body: formData
+            });
 
-        const json = await res.json();
+            json = await res.json();
+        }
 
         if (json.status === 'success') {
             // Tutup modal konfirmasi
@@ -676,12 +686,16 @@ function initArtistEditEvents() {
 
             try {
                 const formData = new FormData(form);
-                const res = await fetch('api/artists.json', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const json = await res.json();
+                let json;
+                if (typeof sbSaveArtist === 'function') {
+                    json = await sbSaveArtist(formData);
+                } else {
+                    const res = await fetch('api/artists.json', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    json = await res.json();
+                }
 
                 if (json.status === 'success') {
                     // Tampilkan notifikasi berhasil

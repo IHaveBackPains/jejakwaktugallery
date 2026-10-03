@@ -1581,6 +1581,17 @@
     </div>
 
 
+    <!-- Supabase JS v2 (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script>
+        if (typeof supabase !== 'undefined') {
+            window.__supabase = supabase;
+        }
+    </script>
+    <!-- Supabase Integration Layer -->
+    <script src="js/supabase-client.js"></script>
+    <script src="js/supabase-db.js"></script>
+
     <!-- Scripts -->
     <script src="js/data.js"></script>
     <script src="js/audio.js"></script>

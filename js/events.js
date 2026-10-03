@@ -1,4 +1,4 @@
-﻿/**
+/**
  * EVENTS.JS â€” Halaman Jadwal Event Seni "Jejak Waktu"
  * Mengelola: fetch events, render cards, filter, detail modal, booking, admin CRUD
  */
@@ -175,13 +175,19 @@ function checkAllEmpty() {
 async function loadAllEvents() {
     showLoading(true);
     try {
-        const resp = await fetch('api/events.json');
-        const json = await resp.json();
-        if (json.status !== 'success') throw new Error(json.message);
-        eventsData = json.data || [];
-        renderAllEvents();
+        // Gunakan Supabase jika sudah dikonfigurasi
+        if (typeof isSupabaseConfigured === 'function' && isSupabaseConfigured()) {
+            const result = await sbFetchEvents();
+            if (result.status === 'success') {
+                eventsData = result.data || [];
+                renderAllEvents();
+                return;
+            }
+            throw new Error(result.message);
+        }
+        throw new Error('Supabase belum dikonfigurasi');
     } catch (err) {
-        console.warn('API events offline, memuat data event bawaan/lokal:', err);
+        console.warn('Supabase events tidak tersedia, memuat data event bawaan/lokal:', err);
         const savedCustomEvents = localStorage.getItem('jejak_waktu_custom_events');
         let customList = [];
         if (savedCustomEvents) {
@@ -763,12 +769,13 @@ async function openEventDetail(eventId) {
 
     content.innerHTML = '<div style="text-align:center; padding:40px; font-family:var(--font-typewriter, \'Special Elite\', monospace); color:#9e7a45;">Memuat detail event...</div>';
 
-    // Fetch fresh data (termasuk booked_count terbaru)
+    // Fetch fresh data (termasuk booked_count terbaru) dari Supabase
     let freshEv = ev;
     try {
-        const resp = await fetch(`api/events.json?id=${eventId}`);
-        const json = await resp.json();
-        if (json.status === 'success') freshEv = json.data;
+        if (typeof isSupabaseConfigured === 'function' && isSupabaseConfigured()) {
+            const result = await sbFetchEventById(eventId);
+            if (result.status === 'success') freshEv = result.data;
+        }
     } catch (_) {}
 
     // Cek apakah user sudah booking event ini
@@ -924,8 +931,13 @@ async function submitBooking(eventId) {
     fd.append('qty', qty);
 
     try {
-        const resp = await fetch('api/bookings.json', { method: 'POST', body: fd });
-        const json = await resp.json();
+        let json;
+        if (typeof sbCreateBooking === 'function') {
+            json = await sbCreateBooking(eventId, qty);
+        } else {
+            const resp = await fetch('api/bookings.json', { method: 'POST', body: fd });
+            json = await resp.json();
+        }
         if (json.status === 'success') {
             showToast('âœ… ' + json.message, 'success');
             await loadMyBookings();
@@ -988,10 +1000,13 @@ async function cancelBooking(bookingId) {
 // ====================================================
 async function loadMyBookings() {
     try {
-        const resp = await fetch('api/bookings.json?my=1');
-        const json = await resp.json();
-        myBookings = json.status === 'success' ? json.data : [];
-        renderMyBookings();
+        if (typeof isSupabaseConfigured === 'function' && isSupabaseConfigured()) {
+            const result = await sbFetchMyBookings();
+            myBookings = result.status === 'success' ? result.data : [];
+            renderMyBookings();
+            return;
+        }
+        throw new Error('Supabase belum dikonfigurasi');
     } catch (_) {
         const savedBookings = localStorage.getItem('jejak_waktu_my_bookings');
         myBookings = savedBookings ? JSON.parse(savedBookings) : [];
@@ -1163,11 +1178,11 @@ async function editEvent(eventId, e) {
     if (e) { e.stopPropagation(); }
     const ev = eventsData.find(x => x.id == eventId);
     if (!ev) {
-        // Fetch dari API jika tidak ada di cache
         try {
-            const resp = await fetch(`api/events.json?id=${eventId}`);
-            const json = await resp.json();
-            if (json.status === 'success') openEventModal(json.data);
+            if (typeof isSupabaseConfigured === 'function' && isSupabaseConfigured()) {
+                const result = await sbFetchEventById(eventId);
+                if (result.status === 'success') openEventModal(result.data);
+            }
         } catch (err) { showToast('Gagal memuat data event', 'error'); }
         return;
     }
@@ -1199,13 +1214,18 @@ async function deleteEvent(eventId, e) {
 // ====================================================
 async function loadAlbumsForForm() {
     try {
-        const resp = await fetch('api/albums.json');
-        const json = await resp.json();
-        if (json.status !== 'success') return;
-        albumsList = json.data || [];
+        if (typeof isSupabaseConfigured === 'function' && isSupabaseConfigured()) {
+            const result = await sbFetchAlbums();
+            if (result.status !== 'success') return;
+            albumsList = result.data || [];
+        } else {
+            // Fallback: gunakan data yang sudah ada di cache/DEFAULT_ALBUMS
+            if (typeof getAlbumsData === 'function') {
+                albumsList = getAlbumsData();
+            }
+        }
         const select = document.getElementById('ev-album-id');
         if (!select) return;
-        // Pertahankan opsi pertama
         albumsList.forEach(alb => {
             const opt = document.createElement('option');
             opt.value = alb.id;

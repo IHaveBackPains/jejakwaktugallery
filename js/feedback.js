@@ -1,7 +1,8 @@
-﻿/**
+/**
  * Feedback (Kritik & Saran) Client Controller "Jejak Waktu"
+ * Database: Supabase (menggantikan MySQL/PHP)
  * Menangani:
- * 1. Form publik Kritik & Saran (Validasi, AJAX Submit, Pesan Sukses)
+ * 1. Form publik Kritik & Saran (Validasi, Submit ke Supabase, Pesan Sukses)
  * 2. Panel Admin (Daftar Masukan, Filter, Detail Modal, Update Status, Hapus)
  * 3. Notifikasi counter otomatis untuk masukan yang "Belum dibaca"
  */
@@ -130,19 +131,28 @@
                     hp_check: hp
                 };
 
-                fetch('api/feedbacks.json', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                })
-                .then(function (res) {
-                    return res.json().then(function (data) {
-                        return { ok: res.ok, status: res.status, data: data };
+                var submitPromise;
+                if (typeof sbSubmitFeedback === 'function') {
+                    submitPromise = sbSubmitFeedback(payload).then(function (res) {
+                        return { ok: res.status === 'success', status: res.status === 'success' ? 200 : 400, data: res };
                     });
-                })
+                } else {
+                    submitPromise = fetch('api/feedbacks.json', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    })
+                    .then(function (res) {
+                        return res.json().then(function (data) {
+                            return { ok: res.ok, status: res.status, data: data };
+                        });
+                    });
+                }
+
+                submitPromise
                 .then(function (result) {
                     if (submitBtn) {
                         submitBtn.disabled = false;
@@ -228,14 +238,23 @@
         // Hanya fetch jika elemen badge admin ada di DOM (artinya user adalah Admin)
         if (!navBadge && !sideBadge && !navBtn) return;
 
-        fetch('api/feedbacks.json?action=count', {
-            method: 'GET',
-            headers: { 'Accept': 'application/json' }
-        })
-        .then(function (res) {
-            if (!res.ok) return null;
-            return res.json();
-        })
+        // Gunakan Supabase jika sudah dikonfigurasi
+        var countPromise;
+        if (typeof isSupabaseConfigured === 'function' && isSupabaseConfigured()) {
+            countPromise = sbFetchFeedbackCount();
+        } else {
+            // Fallback localStorage
+            var saved = localStorage.getItem('jejak_waktu_feedbacks');
+            var list = saved ? JSON.parse(saved) : [];
+            var unreadLocal = list.filter(function(x) { return x.status === 'Belum dibaca'; }).length;
+            countPromise = Promise.resolve({
+                status: 'success',
+                counts: { total: list.length, unread: unreadLocal, read: 0, followed_up: 0 },
+                unread: unreadLocal
+            });
+        }
+
+        countPromise
         .then(function (json) {
             if (!json || json.status !== 'success' || !json.counts) return;
 
@@ -322,19 +341,19 @@
         if (loadingEl) loadingEl.style.display = 'block';
         if (emptyEl) emptyEl.style.display = 'none';
 
-        var url = 'api/feedbacks.json?status=' + encodeURIComponent(currentFilter);
-        if (currentSearch) {
-            url += '&q=' + encodeURIComponent(currentSearch);
+        var url = currentFilter;
+        var searchQ = currentSearch;
+
+        // Gunakan Supabase jika sudah dikonfigurasi
+        var fetchPromise;
+        if (typeof isSupabaseConfigured === 'function' && isSupabaseConfigured()) {
+            fetchPromise = sbFetchFeedbacks(url, searchQ);
+        } else {
+            // Fallback localStorage
+            fetchPromise = Promise.reject(new Error('Supabase belum dikonfigurasi'));
         }
 
-        fetch(url, {
-            method: 'GET',
-            headers: { 'Accept': 'application/json' }
-        })
-        .then(function (res) {
-            if (!res.ok) throw new Error('Akses ditolak atau sesi berakhir');
-            return res.json();
-        })
+        fetchPromise
         .then(function (json) {
             if (loadingEl) loadingEl.style.display = 'none';
 
@@ -347,7 +366,7 @@
             renderFeedbackTable(activeFeedbackList);
         })
         .catch(function (err) {
-            console.warn('API feedback offline, membaca data masukan lokal:', err);
+            console.warn('Supabase feedback tidak tersedia, membaca data masukan lokal:', err);
             if (loadingEl) loadingEl.style.display = 'none';
             var saved = localStorage.getItem('jejak_waktu_feedbacks');
             var list = saved ? JSON.parse(saved) : [];
@@ -507,15 +526,14 @@
     };
 
     function updateFeedbackStatus(id, newStatus, fromModal) {
-        fetch('api/feedbacks.json?action=update_status', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ id: id, status: newStatus })
-        })
-        .then(function (res) { return res.json(); })
+        var updatePromise;
+        if (typeof isSupabaseConfigured === 'function' && isSupabaseConfigured()) {
+            updatePromise = sbUpdateFeedbackStatus(id, newStatus);
+        } else {
+            updatePromise = Promise.resolve({ status: 'success' });
+        }
+
+        updatePromise
         .then(function (json) {
             if (json.status !== 'success') {
                 alert(json.message || 'Gagal mengubah status');
@@ -541,7 +559,7 @@
             }
         })
         .catch(function (err) {
-            alert('Gagal menghubungi server untuk mengubah status.');
+            alert('Gagal menghubungi Supabase untuk mengubah status.');
         });
     }
 
@@ -550,15 +568,15 @@
             return;
         }
 
-        fetch('api/feedbacks.json?action=delete', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ id: id })
-        })
-        .then(function (res) { return res.json(); })
+        var deletePromise;
+        if (typeof isSupabaseConfigured === 'function' && isSupabaseConfigured()) {
+            deletePromise = sbDeleteFeedback(id);
+        } else {
+            // Fallback: hapus dari localStorage
+            deletePromise = Promise.resolve({ status: 'success' });
+        }
+
+        deletePromise
         .then(function (json) {
             if (json.status !== 'success') {
                 alert(json.message || 'Gagal menghapus masukan');
@@ -575,7 +593,7 @@
             }
         })
         .catch(function () {
-            alert('Gagal menghubungi server untuk menghapus masukan.');
+            alert('Gagal menghubungi Supabase untuk menghapus masukan.');
         });
     }
 
