@@ -397,8 +397,12 @@ function getAlbumsData() {
 
 // Get single album by ID (with deduplication)
 function getAlbumById(id) {
+    if (!id) return null;
     const allAlbums = getAlbumsData();
-    const album = allAlbums.find(a => a.id === id);
+    const album = allAlbums.find(a => {
+        const currentId = a.id || a.album_id;
+        return String(currentId).trim() === String(id).trim();
+    });
     if (!album) return null;
     return JSON.parse(JSON.stringify(album));
 }
