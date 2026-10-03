@@ -1206,7 +1206,7 @@ function initFormHandlers() {
             formData.append('curator', curator);
             formData.append('cover_color', coverColor);
             formData.append('description', desc);
-            formData.append('cover_image', coverImage);
+            formData.append('cover_image', coverUrl);
 
             if (albumFileInput && albumFileInput.files && albumFileInput.files[0]) {
                 formData.append('cover_file', albumFileInput.files[0]);
@@ -1228,7 +1228,7 @@ function initFormHandlers() {
                         cover_color: coverColor,
                         accent_color: accentColor,
                         description: desc,
-                        cover_image: coverImage
+                        cover_image: coverUrl
                     };
                     const coverFile = (albumFileInput && albumFileInput.files && albumFileInput.files[0]) ? albumFileInput.files[0] : null;
                     const result = await sbAddAlbum(albumPayload, coverFile);
