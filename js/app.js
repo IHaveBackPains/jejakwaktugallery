@@ -1172,12 +1172,14 @@ function initFormHandlers() {
     if (albumForm) {
         albumForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-
+    
             const submitBtn = albumForm.querySelector('.vintage-btn-submit');
-            const originalBtnText = submitBtn.innerHTML;
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = 'â³ Menjilid Buku Album Baru...';
-
+            const originalBtnText = submitBtn ? submitBtn.innerHTML : 'Buat Album';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '⏳ Menjilid Buku Album Baru...';
+            }
+    
             const title = document.getElementById('album-form-title').value.trim();
             const subtitle = document.getElementById('album-form-subtitle').value.trim();
             const decade = document.getElementById('album-form-decade').value;
@@ -1187,15 +1189,19 @@ function initFormHandlers() {
             const curator = document.getElementById('album-form-curator').value.trim() || 'Koleksi Pribadi';
             const coverColor = document.getElementById('album-form-color').value || '#422a1d';
             const desc = document.getElementById('album-form-desc').value.trim();
+            
+            // Deklarasi coverImage (pakai nama variabel ini secara konsisten)
             const coverImage = albumUrlInput ? albumUrlInput.value.trim() : '';
-
+    
             if (!title) {
                 alert('Silakan masukkan judul buku album.');
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalBtnText;
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                }
                 return;
             }
-
+    
             const formData = new FormData();
             formData.append('title', title);
             formData.append('subtitle', subtitle);
@@ -1206,15 +1212,15 @@ function initFormHandlers() {
             formData.append('curator', curator);
             formData.append('cover_color', coverColor);
             formData.append('description', desc);
-            formData.append('cover_image', coverUrl);
-
+            formData.append('cover_image', coverImage); // DIBENARKAN
+    
             if (albumFileInput && albumFileInput.files && albumFileInput.files[0]) {
                 formData.append('cover_file', albumFileInput.files[0]);
             }
-
+    
             let savedViaAPI = false;
             let createdAlbumId = null;
-
+    
             try {
                 if (typeof sbAddAlbum === 'function') {
                     const albumPayload = {
@@ -1226,9 +1232,9 @@ function initFormHandlers() {
                         location: location,
                         curator: curator,
                         cover_color: coverColor,
-                        accent_color: accentColor,
+                        accent_color: '#c99e46', // DIBENARKAN (Gunakan string hex)
                         description: desc,
-                        cover_image: coverUrl
+                        cover_image: coverImage  // DIBENARKAN
                     };
                     const coverFile = (albumFileInput && albumFileInput.files && albumFileInput.files[0]) ? albumFileInput.files[0] : null;
                     const result = await sbAddAlbum(albumPayload, coverFile);
@@ -1241,7 +1247,7 @@ function initFormHandlers() {
                         method: 'POST',
                         body: formData
                     });
-
+    
                     if (response.ok) {
                         const result = await response.json();
                         if (result.status === 'success' && result.data) {
@@ -1251,10 +1257,10 @@ function initFormHandlers() {
                     }
                 }
             } catch (err) {
-                console.warn('API Backend add_album tidak terjangkau, menyimpan secara lokal offline.', err);
+                console.error('DETAIL ERROR SUPABASE:', err);
             }
-
-            // Fallback penyimpanan album lokal jika offline
+    
+            // Fallback penyimpanan album lokal jika offline / API gagal
             if (!savedViaAPI) {
                 let resolvedCover = coverImage;
                 if (albumPreviewImg && albumPreviewImg.src && albumPreviewImg.src.startsWith('data:image/')) {
@@ -1263,10 +1269,10 @@ function initFormHandlers() {
                 if (!resolvedCover) {
                     resolvedCover = 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=800&q=80';
                 }
-
+    
                 const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'album';
                 createdAlbumId = `${slug}-${Date.now().toString().slice(-4)}`;
-
+    
                 const newLocalAlbum = {
                     id: createdAlbumId,
                     title: title,
@@ -1282,36 +1288,41 @@ function initFormHandlers() {
                     curator: curator,
                     photos: []
                 };
-
-                addAlbumLocal(newLocalAlbum);
+    
+                if (typeof addAlbumLocal === 'function') {
+                    addAlbumLocal(newLocalAlbum);
+                }
             }
-
+    
             if (typeof vintageSound !== 'undefined' && vintageSound.playPageFlip) {
                 vintageSound.playPageFlip();
             }
-
+    
             alert(savedViaAPI 
-                ? `Buku album "${title}" berhasil dijilid dan disimpan (Tersimpan Lokal)!`
+                ? `Buku album "${title}" berhasil dijilid dan disimpan!`
                 : `Buku album "${title}" berhasil dibuat (Tersimpan Lokal)!`
             );
-
+    
             albumForm.reset();
             if (albumPreviewContainer) albumPreviewContainer.style.display = 'none';
             if (albumModal) {
                 albumModal.classList.remove('is-open');
                 albumModal.setAttribute('aria-hidden', 'true');
             }
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalBtnText;
-
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
+    
             // Muat ulang data album dan alihkan ke album baru
-            await fetchAlbumsFromDB();
-            renderHomePage();
-            renderAlbumsPage();
-            populateAlbumSelect();
-            if (createdAlbumId) {
+            if (typeof fetchAlbumsFromDB === 'function') await fetchAlbumsFromDB();
+            if (typeof renderHomePage === 'function') renderHomePage();
+            if (typeof renderAlbumsPage === 'function') renderAlbumsPage();
+            if (typeof populateAlbumSelect === 'function') populateAlbumSelect();
+            
+            if (createdAlbumId && typeof openAlbumDetail === 'function') {
                 openAlbumDetail(createdAlbumId);
-            } else {
+            } else if (typeof switchTab === 'function') {
                 switchTab('galeri');
             }
         });
