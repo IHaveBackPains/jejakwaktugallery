@@ -1019,8 +1019,8 @@ function initFormHandlers() {
                     const photoPayload = {
                         album_id: targetAlbum,
                         title: title,
-                        artist_1: artist1,
-                        artist_2: artist2,
+                        artist_1: artist_1,
+                        artist_2: artist_2,
                         year: year,
                         date: date,
                         location: location,
