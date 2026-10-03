@@ -23,11 +23,11 @@
 // ======================================================
 const SUPABASE_URL = (typeof process !== 'undefined' && process.env && process.env.NEXT_PUBLIC_SUPABASE_URL)
     || (typeof window !== 'undefined' && window.NEXT_PUBLIC_SUPABASE_URL)
-    || 'https://YOUR_PROJECT_ID.supabase.co';
+    || 'https://paykaqpalcupyojyamoh.supabase.co';
 
 const SUPABASE_KEY = (typeof process !== 'undefined' && process.env && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
     || (typeof window !== 'undefined' && window.NEXT_PUBLIC_SUPABASE_ANON_KEY)
-    || 'YOUR_SUPABASE_ANON_KEY';
+    || 'sb_publishable_X1E1jjxqkz64Nml1-QTtuQ_Ap42PjmZ';
 
 // ======================================================
 // INISIALISASI CLIENT (menggunakan Supabase JS v2 via CDN)
