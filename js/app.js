@@ -978,6 +978,12 @@ function initFormHandlers() {
             const artist_1 = document.getElementById('form-photo-artist-1') ? document.getElementById('form-photo-artist-1').value.trim() : '';
             const artist_2 = document.getElementById('form-photo-artist-2') ? document.getElementById('form-photo-artist-2').value.trim() : '';
             const year = document.getElementById('form-photo-year').value.trim();
+            const dateInput = document.getElementById('form-photo-date');
+            const date = dateInput ? dateInput.value.trim() : (year ? `Tahun ${year}` : 'Kenangan Abadi');
+            const tiltInput = document.getElementById('form-photo-tilt');
+            const tilt = tiltInput ? tiltInput.value.trim() : '0deg';
+            const tapeInput = document.getElementById('form-photo-tape');
+            const tape = tapeInput ? tapeInput.value.trim() : 'none';
             const location = document.getElementById('form-photo-location').value.trim() || 'Indonesia';
             const medium = document.getElementById('form-photo-medium') ? document.getElementById('form-photo-medium').value.trim() : '';
             const dimensions = document.getElementById('form-photo-dimension') ? document.getElementById('form-photo-dimension').value.trim() : '';
