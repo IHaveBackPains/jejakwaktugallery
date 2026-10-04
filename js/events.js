@@ -1039,7 +1039,7 @@ function renderMyBookings() {
                 <div class="booking-item-meta">
                     <span>ðŸ“… ${b.start_date ? formatDateDisplay(b.start_date) : 'â€”'}</span>
                     <span>ðŸ“ ${escHtml(b.location_text || 'â€”')}</span>
-                    <span>ðŸŽ« ${escHtml(b.total_price || 'Gratis')}</span>
+                    <span>🎟️ ${escHtml(b.total_price \vert{}\vert{} 'Gratis')}</span>${b.qty > 1 ? `<span>${b.qty} tiket</span>` : ''}
                     ${b.qty > 1 ? `<span>${b.qty} tiket</span>` : ''}
                     <span>Status event: ${statusLabel[b.event_status] || b.event_status || 'â€”'}</span>
                 </div>
