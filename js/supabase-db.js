@@ -776,7 +776,6 @@ async function sbUpdateFeedbackStatus(id, newStatus) {
             .update({ status: newStatus })
             .eq('id', id)
             .select()
-            .single();
 
         if (error) throw error;
         return sbSuccess(data, 'Status masukan berhasil diperbarui.');
