@@ -1141,25 +1141,7 @@ function initEventFormSubmit() {
         const editId = fd.get('event_edit_id');
         fd.delete('event_edit_id');
 
-        try {
-            let url = 'api/events.json';
-            if (editId) url += `?_method=PUT&id=${editId}`;
 
-            const resp = await fetch(url, { method: 'POST', body: fd });
-            const json = await resp.json();
-
-            if (json.status === 'success') {
-                showToast('âœ… ' + json.message, 'success');
-                closeEventModal();
-                // Reaktif: Jika event baru memiliki tanggal mulai, sinkronkan kalender ke tanggal tersebut secara instan
-                const newStartDate = fd.get('start_date');
-                if (newStartDate) {
-                    const parts = newStartDate.split('-');
-                    if (parts.length >= 2) {
-                        calViewDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, 1);
-                        selectedCalendarDate = newStartDate;
-                    }
-                }
                 await loadAllEvents();
             } else {
                 showToast('âš  ' + json.message, 'error');
