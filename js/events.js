@@ -1037,15 +1037,16 @@ function renderMyBookings() {
             <div class="booking-item-info">
                 <div class="booking-item-event-title">${escHtml(b.event_title || 'Event Seni')}</div>
                 <div class="booking-item-meta">
-                    <span>📅 ${b.start_date ? formatDateDisplay(b.start_date) : '—'}</span>
-                    <span>📍 ${escHtml(b.location_text || '—')}</span>
-                    <span>🎟️ ${escHtml(b.total_price \vert{}\vert{} 'Gratis')}</span>${b.qty > 1 ? `<span>${b.qty} tiket</span>` : ''}
-                    <span>Status event: ${statusLabel[b.event_status] || b.event_status || '—'}</span>
+                    <span>ðŸ“… ${b.start_date ? formatDateDisplay(b.start_date) : 'â€”'}</span>
+                    <span>ðŸ“ ${escHtml(b.location_text || 'â€”')}</span>
+                    <span>ðŸŽ« ${escHtml(b.total_price || 'Gratis')}</span>
+                    ${b.qty > 1 ? `<span>${b.qty} tiket</span>` : ''}
+                    <span>Status event: ${statusLabel[b.event_status] || b.event_status || 'â€”'}</span>
                 </div>
                 <div>
-                    <span class="booking-item-code">Kode: ${escHtml(b.booking_code || '—')}</span>
-                    <span style="font-family:var(--font-typewriter,'Special Elite',monospace); font-size:0.72rem; color:${b.status === 'confirmed' ? '#0f5132' : (b.status === 'cancelled' ? '#842029' : '#856404')}; margin-left:8px;">
-                        ${b.status === 'confirmed' ? '✅ Terkonfirmasi' : (b.status === 'cancelled' ? '✖ Dibatalkan' : '⏳ ' + escHtml(b.status || 'Menunggu'))}
+                    <span class="booking-item-code">Kode: ${escHtml(b.booking_code || 'â€”')}</span>
+                    <span style="font-family:var(--font-typewriter,'Special Elite',monospace); font-size:0.72rem; color:${b.status === 'confirmed' ? '#0f5132' : '#856404'}; margin-left:8px;">
+                        ${b.status === 'confirmed' ? 'âœ… Terkonfirmasi' : (b.status === 'cancelled' ? 'âœ• Dibatalkan' : b.status)}
                     </span>
                 </div>
             </div>
