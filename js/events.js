@@ -1141,34 +1141,47 @@ function initEventFormSubmit() {
         const editId = fd.get('event_edit_id');
         fd.delete('event_edit_id');
 
-        try {
-            let url = 'api/events.json';
-            if (editId) url += `?_method=PUT&id=${editId}`;
+       try {
+            // 1. Konversi FormData (fd) menjadi object untuk Supabase
+            const payload = Object.fromEntries(fd.entries());
 
-            const resp = await fetch(url, { method: 'POST', body: fd });
-            const json = await resp.json();
-
-            if (json.status === 'success') {
-                showToast('âœ… ' + json.message, 'success');
-                closeEventModal();
-                // Reaktif: Jika event baru memiliki tanggal mulai, sinkronkan kalender ke tanggal tersebut secara instan
-                const newStartDate = fd.get('start_date');
-                if (newStartDate) {
-                    const parts = newStartDate.split('-');
-                    if (parts.length >= 2) {
-                        calViewDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, 1);
-                        selectedCalendarDate = newStartDate;
-                    }
-                }
-                await loadAllEvents();
+            let result;
+            if (editId) {
+                // Mode EDIT: Update data berdasarkan ID di Supabase
+                result = await supabase
+                    .from('events') // Sesuaikan dengan nama tabel di Supabase Anda
+                    .update(payload)
+                    .eq('id', editId);
             } else {
-                showToast('âš  ' + json.message, 'error');
+                // Mode TAMBAH: Insert data baru ke Supabase
+                result = await supabase
+                    .from('events') // Sesuaikan dengan nama tabel di Supabase Anda
+                    .insert([payload]);
             }
+
+            // Jika ada error dari Supabase, lempar ke catch block
+            if (result.error) throw result.error;
+
+            // Jika berhasil
+            showToast('✅ Event berhasil disimpan!', 'success');
+            closeEventModal();
+
+            // Reaktif: Jika event baru memiliki tanggal mulai, sinkronkan kalender ke tanggal tersebut secara instan
+            const newStartDate = fd.get('start_date');
+            if (newStartDate) {
+                const parts = newStartDate.split('-');
+                if (parts.length >= 2) {
+                    calViewDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, 1);
+                    selectedCalendarDate = newStartDate;
+                }
+            }
+            await loadAllEvents();
+
         } catch (err) {
-            showToast('Kesalahan jaringan: ' + err.message, 'error');
+            showToast('⚠️ Gagal menyimpan event: ' + err.message, 'error');
         } finally {
             submitBtn.disabled = false;
-            submitBtn.textContent = editId ? 'âœ“ Simpan Perubahan' : 'âœ“ Simpan Event';
+            submitBtn.textContent = editId ? '✓ Simpan Perubahan' : '✓ Simpan Event';
         }
     });
 }
