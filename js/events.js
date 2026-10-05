@@ -773,7 +773,7 @@ async function openEventDetail(eventId) {
     let freshEv = ev;
     try {
         if (typeof isSupabaseConfigured === 'function' && isSupabaseConfigured()) {
-            const result = await sbFetchEventById(eventId);
+            const  = await sbFetchEventById(eventId);
             if (result.status === 'success') freshEv = result.data;
         }
     } catch (_) {}
@@ -1148,13 +1148,13 @@ function initEventFormSubmit() {
             let result;
             if (editId) {
                 // Mode EDIT: Update data berdasarkan ID di Supabase
-                result = await _supabase
+                result = await sbSaveEvent(fd, editId)
                     .from('events') // Sesuaikan dengan nama tabel di Supabase Anda
                     .update(payload)
                     .eq('id', editId);
             } else {
                 // Mode TAMBAH: Insert data baru ke Supabase
-                result = await _supabase
+                result = await sbSaveEvent
                     .from('events') // Sesuaikan dengan nama tabel di Supabase Anda
                     .insert([payload]);
             }
