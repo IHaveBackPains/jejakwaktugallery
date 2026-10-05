@@ -1148,13 +1148,13 @@ function initEventFormSubmit() {
             let result;
             if (editId) {
                 // Mode EDIT: Update data berdasarkan ID di Supabase
-                result = await supabase
+                result = await _supabase
                     .from('events') // Sesuaikan dengan nama tabel di Supabase Anda
                     .update(payload)
                     .eq('id', editId);
             } else {
                 // Mode TAMBAH: Insert data baru ke Supabase
-                result = await supabase
+                result = await _supabase
                     .from('events') // Sesuaikan dengan nama tabel di Supabase Anda
                     .insert([payload]);
             }
