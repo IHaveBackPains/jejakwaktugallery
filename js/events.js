@@ -773,7 +773,7 @@ async function openEventDetail(eventId) {
     let freshEv = ev;
     try {
         if (typeof isSupabaseConfigured === 'function' && isSupabaseConfigured()) {
-            const  = await sbFetchEventById(eventId);
+            const await sbFetchEventById(eventId);
             if (result.status === 'success') freshEv = result.data;
         }
     } catch (_) {}
